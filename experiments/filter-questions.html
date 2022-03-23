@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<title>Alex's little helper</title>
+<style>
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script id="data" type="application/json">
+{
+    "questions": [
+        {
+            "id": "N1 (JI70 Ст.1)",
+            "question": "Что понимается под термином \"охрана труда\" в Законе Республики Беларусь \"Об охране труда\"?",
+            "answer": "Система обеспечения безопасности жизни и Здоровья работающих в процессе трудовой деятельности, включающая правовые, социально-экономические, организационные, технические, психофизиологические, санитарно-противоэпидемические, лечебно-профилактические, реабилитационные и иные мероприятия и средства."
+        },
+        {
+            "id": "N2 (JI70 Ст.1)",
+            "question": "Какие работы, относятся к \"работам с повышенной опасностью\" в соответствии с Законом Республики Беларусь \"Об охране труда\"?",
+            "answer": "Работы, при выполнении которых на работающего могут воздействовать вредные и (или) опасные производственные факторы, для управления которыми требуется осуществить специальные организационные и технические мероприятия, обеспечивающие безопасность работающих при выполнении этих работ."
+        },
+        {
+            "id": "N3 (JI70 Ст. 2)",
+            "question": "Какими документами осуществляется правовое регулирование отношений в области охраны труда согласно Закону РБ \"Об охране труда\"?",
+            "answer": "Всеми документами, указанными во всех вариантах ответа."
+        },
+        {
+            "id": "N4 (JI70 Ст.З)",
+            "question": "На кого распространяется действие Закона Республики Беларусь \"Об охране труда\"?",
+            "answer": "На всех работодателей и работающих граждан Республики Беларусь, иностранных граждан и лиц без гражданства."
+        },
+        {
+            "id": "N5 (JI70 Ст. 4)",
+            "question": "Что должен предпринять работодатель при отсутствии в нормативных правовых актах, в том числе технических нормативных правовых актах, технических регламентах Таможенного союза и Евразийского экономического союза, требований по охране труда?",
+            "answer": "Принять необходимые меры, обеспечивающие сохранение жизни, Здоровья и работоспособности работающих в процессе трудовой деятельности."
+        }
+    ]
+}
+</script>
+<body>
+<div class="container-fluid">
+    <nav class="nav bg-primary bg-gradient text-white rounded">
+        <div class="row align-items-center">
+            <div class="col-auto">
+                <input type="text" id="searchText" class="form-control" aria-describedby="searchTextHelpInline">
+            </div>
+            <div class="col-auto form-check">
+                <input class="form-check-input" type="checkbox" id="regexCheck">
+                <label class="form-check-label" for="regexCheck">Regex</label>
+            </div>
+            <div class="col-auto form-check">
+                <input class="form-check-input" type="checkbox" id="questionCheck" checked>
+                <label class="form-check-label" for="questionCheck">Question</label>
+            </div>
+            <div class="col-auto form-check">
+                <input class="form-check-input" type="checkbox" id="answerCheck" checked>
+                <label class="form-check-label" for="answerCheck">Answer</label>
+            </div>
+            <a class="col-auto nav-link link-light" href="#">Clear</a>
+        </div>
+    </nav>
+    <div class="data_display container"></div>
+</div>
+
+<div class="data_record row p-2 d-none">
+    <div class="row bg-info">
+        <div class="data_record_id col-sm-2"></div>
+        <div class="data_record_question col"></div>
+    </div>
+    <div class="data_record_answer row bg-light fw-light"></div>
+</div>
+
+<script>
+data = JSON.parse(document.getElementById("data").text)
+showData($.grep(data.questions, matchSearch))
+
+function matchSearch(v, i) {
+    search = $("input#searchText").val()
+    if (search.length == 0) return true
+    checkQuestion = $("input#questionCheck").is(":checked")
+    checkAnswer = $("input#answerCheck").is(":checked")
+    if ($("input#regexCheck").is(":checked")) {
+        var re = new RegExp(search, "gi");
+        if (checkQuestion && v.question.search(re) >= 0) return true
+        if (checkAnswer && v.answer.search(re) >= 0) return true
+    } else {
+        if (checkQuestion && v.question.toLowerCase().search(search.toLowerCase()) >= 0) return true
+        if (checkAnswer && v.answer.toLowerCase().search(search.toLowerCase()) >= 0) return true
+    }
+    return false
+}
+
+function showData(records) {
+    $("div.data_display").empty()
+    for(i in records) {
+        $("body>div.data_record").clone().appendTo("div.data_display")
+        $("div.data_display>div:last-child div.data_record_id").text(records[i].id)
+        $("div.data_display>div:last-child div.data_record_question").text(records[i].question)
+        $("div.data_display>div:last-child div.data_record_answer").text(records[i].answer)
+        $("div.data_display>div:last-child").removeClass("d-none")
+    }
+}
+</script>
+</body>
+</html>

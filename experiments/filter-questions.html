@@ -41,9 +41,9 @@
 }
 </script>
 <body>
-<div class="container-fluid">
+<div class="container">
     <nav class="nav bg-primary bg-gradient text-white rounded">
-        <div class="row align-items-center">
+        <div class="row align-items-center container-fluid m-0 p-0">
             <div class="col-auto">
                 <input type="text" id="searchText" class="form-control" aria-describedby="searchTextHelpInline">
             </div>
@@ -59,36 +59,106 @@
                 <input class="form-check-input" type="checkbox" id="answerCheck" checked>
                 <label class="form-check-label" for="answerCheck">Answer</label>
             </div>
-            <a class="col-auto nav-link link-light" href="#">Clear</a>
+            <div class="col-auto">
+                <a class="col-auto nav-link link-light p-0" id="clearSearch" href="#">Clear</a>
+            </div>
         </div>
     </nav>
     <div class="data_display container"></div>
 </div>
 
 <div class="data_record row p-2 d-none">
-    <div class="row bg-info">
-        <div class="data_record_id col-sm-2"></div>
+    <div class="row bg-info p-2 m-0">
+        <div class="data_record_id col-2"></div>
         <div class="data_record_question col"></div>
     </div>
-    <div class="data_record_answer row bg-light fw-light"></div>
+    <div class="data_record_answer row bg-light fw-light m-0 d-inline"></div>
 </div>
 
 <script>
 data = JSON.parse(document.getElementById("data").text)
-showData($.grep(data.questions, matchSearch))
+
+$("#searchText").keyup(displayData)
+$("#clearSearch").click(clearSearch)
+$("#regexCheck").change(displayData)
+$("#questionCheck").change(displayData)
+$("#answerCheck").change(displayData)
+
+displayData()
+
+function displayData() {
+    showData($.map($.grep(data.questions, matchSearch), markSearchMatch))
+}
+
+function clearSearch() {
+    $("input#searchText").val("")
+    displayData()
+}
+
+function markSearchMatch(v, i) {
+    var search = $("input#searchText").val()
+    if (search.length == 0) return v
+    var cv = {
+        "id": v.id,
+        "question": v.question,
+        "answer": v.answer
+    }
+    var checkQuestion = $("input#questionCheck").is(":checked")
+    var checkAnswer = $("input#answerCheck").is(":checked")
+    if ($("input#regexCheck").is(":checked")) {
+        var re = new RegExp(search, "gi");
+        if (checkQuestion) cv.question = replaceRegexMatch(cv.question, re, markText)
+        if (checkAnswer) cv.answer = replaceRegexMatch(cv.answer, re, markText)
+    } else {
+        if (checkQuestion) cv.question = replaceTextMatch(cv.question, search, markText)
+        if (checkAnswer) cv.answer = replaceTextMatch(cv.answer, search, markText)
+    }
+    return cv
+}
+
+function replaceTextMatch(s, t, f) {
+    if (!t) return s
+    var ss = s.toLowerCase()
+    var st = t.toLowerCase()
+    var rs = ""
+    for(var p = 0; p < s.length;) {
+        var e = ss.indexOf(st, p)
+        if(e >= 0) {
+            rs = rs + s.substring(p, e) + f(s.substring(e, e + t.length))
+            p = e + t.length
+        } else {
+            rs = rs + s.substring(p, s.length)
+            p = s.length
+        }
+    }
+    return rs
+}
+
+function replaceRegexMatch(s, r, f) {
+    var matches = s.match(r)
+    if (!matches) return s
+    var strings = s.split(r)
+    return strings.map(function(v, i) {
+        return i < matches.length  ?  v + f(matches[i]) : v
+    }).join("")
+}
+
+function markText(s) {
+    return "<span class=\"m-0 p-0 fw-bold\">" + s + "</span>"
+}
 
 function matchSearch(v, i) {
-    search = $("input#searchText").val()
+    var search = $("input#searchText").val()
     if (search.length == 0) return true
-    checkQuestion = $("input#questionCheck").is(":checked")
-    checkAnswer = $("input#answerCheck").is(":checked")
+    var checkQuestion = $("input#questionCheck").is(":checked")
+    var checkAnswer = $("input#answerCheck").is(":checked")
     if ($("input#regexCheck").is(":checked")) {
         var re = new RegExp(search, "gi");
         if (checkQuestion && v.question.search(re) >= 0) return true
         if (checkAnswer && v.answer.search(re) >= 0) return true
     } else {
-        if (checkQuestion && v.question.toLowerCase().search(search.toLowerCase()) >= 0) return true
-        if (checkAnswer && v.answer.toLowerCase().search(search.toLowerCase()) >= 0) return true
+        if (checkQuestion && v.question.toLowerCase().indexOf(search.toLowerCase()) >= 0) return true
+        if (checkAnswer && v.answer.toLowerCase().indexOf(search.toLowerCase()) >= 0) return true
     }
     return false
 }
@@ -98,8 +168,8 @@ function showData(records) {
     for(i in records) {
         $("body>div.data_record").clone().appendTo("div.data_display")
         $("div.data_display>div:last-child div.data_record_id").text(records[i].id)
-        $("div.data_display>div:last-child div.data_record_question").text(records[i].question)
-        $("div.data_display>div:last-child div.data_record_answer").text(records[i].answer)
+        $("div.data_display>div:last-child div.data_record_question").append(records[i].question)
+        $("div.data_display>div:last-child div.data_record_answer").append(records[i].answer)
         $("div.data_display>div:last-child").removeClass("d-none")
     }
 }

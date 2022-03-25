@@ -11,38 +11,57 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script id="data" type="application/json">
 {
+    "exams": [
+        "Экзамен для руководителей и специалистов, инженеров по ОТ Министерства финансов"
+    ],
+    "themes": [
+        [
+            "Законодательная и нормативная основы охраны труда",
+            0
+        ]
+    ],
     "questions": [
         {
-            "id": "N1 (JI70 Ст.1)",
-            "question": "Что понимается под термином \"охрана труда\" в Законе Республики Беларусь \"Об охране труда\"?",
-            "answer": "Система обеспечения безопасности жизни и Здоровья работающих в процессе трудовой деятельности, включающая правовые, социально-экономические, организационные, технические, психофизиологические, санитарно-противоэпидемические, лечебно-профилактические, реабилитационные и иные мероприятия и средства."
+            "theme": 0,
+            "id": "N1",
+            "ref": "JI70 Ст.1",
+            "question": "\nЧто понимается под термином \"охрана труда\" в Законе Республики Беларусь \"Об охране труда\"?\n",
+            "answer": "\nСистема обеспечения безопасности жизни и Здоровья работающих в процессе трудовой деятельности, включающая правовые, социально-экономические, организационные, технические, психофизиологические,\nсанитарно-противоэпидемические, лечебно-профилактические, реабилитационные и иные мероприятия и средства.\n"
         },
         {
-            "id": "N2 (JI70 Ст.1)",
-            "question": "Какие работы, относятся к \"работам с повышенной опасностью\" в соответствии с Законом Республики Беларусь \"Об охране труда\"?",
-            "answer": "Работы, при выполнении которых на работающего могут воздействовать вредные и (или) опасные производственные факторы, для управления которыми требуется осуществить специальные организационные и технические мероприятия, обеспечивающие безопасность работающих при выполнении этих работ."
+            "theme": 0,
+            "id": "N2",
+            "ref": "JI70 Ст.1",
+            "question": "\nКакие работы, относятся к \"работам с повышенной опасностью\" в соответствии с Законом Республики Беларусь \"Об охране труда\"?\n",
+            "answer": "\nРаботы, при выполнении которых на работающего могут воздействовать вредные и (или) опасные производственные факторы, для управления которыми требуется осуществить специальные организационные и технические мероприятия, обеспечивающие безопасность работающих при выполнении этих работ.\n"
         },
         {
-            "id": "N3 (JI70 Ст. 2)",
-            "question": "Какими документами осуществляется правовое регулирование отношений в области охраны труда согласно Закону РБ \"Об охране труда\"?",
-            "answer": "Всеми документами, указанными во всех вариантах ответа."
+            "theme": 0,
+            "id": "N3",
+            "ref": "JI70 Ст. 2",
+            "question": "\nКакими документами осуществляется правовое регулирование отношений в области охраны труда согласно Закону РБ \"Об охране труда\"?\n",
+            "answer": "\nВсеми документами, указанными во всех вариантах ответа.\n"
         },
         {
-            "id": "N4 (JI70 Ст.З)",
-            "question": "На кого распространяется действие Закона Республики Беларусь \"Об охране труда\"?",
-            "answer": "На всех работодателей и работающих граждан Республики Беларусь, иностранных граждан и лиц без гражданства."
+            "theme": 0,
+            "id": "N4",
+            "ref": "JI70 Ст.З",
+            "question": "\nНа кого распространяется действие Закона Республики Беларусь \"Об охране труда\"?\n",
+            "answer": "\nНа всех работодателей и работающих граждан Республики Беларусь, иностранных граждан и лиц без гражданства.\n"
         },
         {
-            "id": "N5 (JI70 Ст. 4)",
-            "question": "Что должен предпринять работодатель при отсутствии в нормативных правовых актах, в том числе технических нормативных правовых актах, технических регламентах Таможенного союза и Евразийского экономического союза, требований по охране труда?",
-            "answer": "Принять необходимые меры, обеспечивающие сохранение жизни, Здоровья и работоспособности работающих в процессе трудовой деятельности."
+            "theme": 0,
+            "id": "N5",
+            "ref": "JI70 Ст. 4",
+            "question": "\nЧто должен предпринять работодатель при отсутствии в нормативных правовых актах, в том числе технических нормативных правовых актах, технических регламентах Таможенного союза и Евразийского экономического союза, требований по охране труда?\n",
+            "answer": "\nПринять необходимые меры, обеспечивающие сохранение жизни, Здоровья и работоспособности работающих в процессе\nтрудовой деятельности.\n"
         }
     ]
 }
 </script>
 <body>
 <div class="container">
-    <nav class="nav bg-primary bg-gradient text-white rounded">
+    <nav class="nav bg-primary bg-gradient text-white">
         <div class="row align-items-center container-fluid m-0 p-0">
             <div class="col-auto">
                 <input type="text" id="searchText" class="form-control" aria-describedby="searchTextHelpInline">
@@ -67,8 +86,9 @@
     <div class="data_display container"></div>
 </div>
 
-<div class="data_record row p-2 d-none">
+<div class="data_record row p-2 d-none border-start border-end border-bottom">
     <div class="row bg-info p-2 m-0">
+        <div class="data_record_theme row px-2 m-0 small text-secondary"></div>
         <div class="data_record_id col-2"></div>
         <div class="data_record_question col"></div>
     </div>
@@ -76,15 +96,21 @@
 </div>
 
 <script>
-data = JSON.parse(document.getElementById("data").text)
+var displayTimer
+var data = JSON.parse(document.getElementById("data").text)
 
-$("#searchText").keyup(displayData)
+$("#searchText").keyup(delayedDisplayData)
 $("#clearSearch").click(clearSearch)
 $("#regexCheck").change(displayData)
 $("#questionCheck").change(displayData)
 $("#answerCheck").change(displayData)
 
 displayData()
+
+function delayedDisplayData() {
+    clearTimeout(displayTimer)
+    setTimeout(displayData, 2000)
+}
 
 function displayData() {
     showData($.map($.grep(data.questions, matchSearch), markSearchMatch))
@@ -99,7 +125,9 @@ function markSearchMatch(v, i) {
     var search = $("input#searchText").val()
     if (search.length == 0) return v
     var cv = {
+        "theme": v.theme,
         "id": v.id,
+        "ref": v.ref,
         "question": v.question,
         "answer": v.answer
     }
@@ -167,7 +195,8 @@ function showData(records) {
     $("div.data_display").empty()
     for(i in records) {
         $("body>div.data_record").clone().appendTo("div.data_display")
-        $("div.data_display>div:last-child div.data_record_id").text(records[i].id)
+        $("div.data_display>div:last-child div.data_record_theme").append(data.themes[records[i].theme][0])
+        $("div.data_display>div:last-child div.data_record_id").append(records[i].id + ' <span class="small px-2">(' + records[i].ref + ')</span>')
         $("div.data_display>div:last-child div.data_record_question").append(records[i].question)
         $("div.data_display>div:last-child div.data_record_answer").append(records[i].answer)
         $("div.data_display>div:last-child").removeClass("d-none")
